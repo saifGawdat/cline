@@ -2,9 +2,10 @@ out
 dist
 node_modules
 tmp
-.vscode-test/
+temp_auto_push.bat
 *.vsix
 
 .DS_Store
 
-pnpm-lock.yaml
+pnpm-lock.yaml.gitignore
+branch_structure.json
