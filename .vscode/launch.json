@@ -1,69 +1,50 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
-// Use IntelliSense to learn about possible attributes.
-// Hover to view descriptions of existing attributes.
-// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Run Extension",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-workspace-trust", "${workspaceFolder}"],
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
-			"preLaunchTask": "${defaultBuildTask}",
-			"env": {
-				"IS_DEV": "true",
-				"DEV_WORKSPACE_FOLDER": "${workspaceFolder}",
-				// Use the environment variable to determine the backend URL
-				// Options: "production", "staging", "local"
-				// Require the extension to reload to apply changes
-				"CLINE_ENVIRONMENT": "production"
-			}
-		},
-		{
-			"name": "Run Extension (Fresh Install Mode)",
-			"type": "extensionHost",
-			"request": "launch",
-			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--user-data-dir=${workspaceFolder}/dist/tmp/user",
-				"--profile-temp",
-				"--sync=off",
-				"--disable-extensions",
-				"--extensionDevelopmentPath=${workspaceFolder}",
-				"${workspaceFolder}"
-			],
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
-			"preLaunchTask": "clean-tmp-user",
-			"internalConsoleOptions": "openOnSessionStart",
-			"postDebugTask": "stop",
-			"env": {
-				"IS_DEV": "true",
-				"TEMP_PROFILE": "true",
-				"DEV_WORKSPACE_FOLDER": "${workspaceFolder}",
-				"CLINE_ENVIRONMENT": "production"
-			}
-		},
-		{
-			"type": "node",
-			"request": "launch",
-			"name": "Run Standalone Service",
-			"skipFiles": ["<node_internals>/**"],
-			"sourceMaps": true,
-			"resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
-			"cwd": "${workspaceFolder}/dist-standalone",
-			"outFiles": ["${workspaceFolder}/dist-standalone/**/*.js"],
-			"preLaunchTask": "compile-standalone",
-			"env": {
-				// Turns on grpc debug log.
-				//"GRPC_TRACE": "all",
-				//"GRPC_VERBOSITY": "DEBUG",
-				"NODE_PATH": "${workspaceFolder}/dist-standalone/node_modules",
-
-				"HOST_BRIDGE_ADDRESS": "localhost:50052"
-			},
-			"program": "standalone.js"
-		}
-	]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug SST",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["dev", "--increase-timeout"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      // sourceMapRenames helps with the loading spinner when debugging and viewing local variables
+      "sourceMapRenames": false,
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      }
+    },
+    {
+      "name": "Debug Tests - Unit",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["bind", "yarn", "\"jest\"", "\"--watch\"", "\"--config\"", "\"./jest.unit.config.cjs\"", "\"${input:scopeTestsFileName}\""],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      },
+    },
+    {
+      "name": "Debug Tests - E2E",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["bind", "yarn", "\"vitest\"", "\"--config\"", "\"./vitest.e2e.config.ts\"", "\"${input:scopeTestsFileName}\""],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      },
+    },
+  ],
+  "inputs": [
+    {
+      "id": "scopeTestsFileName",
+      "type": "promptString",
+      "description": "Partial file name to scope test debugging to. ex. arena. Leave blank to run all tests.",
+    }
+  ]
 }
