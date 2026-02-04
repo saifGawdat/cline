@@ -3,31 +3,7 @@
  * Allows switching between different feature flag providers (PostHog, etc.)
  */
 
-/**
- * Feature flags settings that control how feature flags are retrieved
- */
-export interface FeatureFlagsSettings {
-	/** Whether feature flags are enabled */
-	enabled: boolean
-	/** Optional timeout for feature flag requests */
-	timeout?: number
-}
-
-type JsonType =
-	| string
-	| number
-	| boolean
-	| null
-	| {
-			[key: string]: JsonType
-	  }
-	| Array<JsonType>
-	| JsonType[]
-export type FeatureFlagPayload = string | number | boolean | { [key: string]: JsonType } | JsonType[] | null
-export type FeatureFlagsAndPayloads = {
-	featureFlags?: Record<string, FeatureFlagPayload>
-	featureFlagPayloads?: Record<string, FeatureFlagPayload>
-}
+import { FeatureFlagsAndPayloads, FeatureFlagsSettings } from "@/shared/services/feature-flags"
 
 /**
  * Abstract interface for feature flags providers
